@@ -221,7 +221,6 @@ public class MiniProfiler : EditorWindow
             if(!willBeCombined)
             {
                 if (!(mf.GetComponentInParent<PlayerCharacterController>() ||
-                    mf.GetComponentInParent<EnemyController>() ||
                     mf.GetComponentInParent<Pickup>() ||
                     mf.GetComponentInParent<Objective>()))
                 {
@@ -244,7 +243,6 @@ public class MiniProfiler : EditorWindow
             }
         }
         int lightsCount = GameObject.FindObjectsOfType<Light>().Length;
-        int enemyCount = GameObject.FindObjectsOfType<EnemyController>().Length;
 
         // Level analysis 
         m_LevelAnalysisString += "- Meshes count: " + meshCount;
@@ -256,8 +254,6 @@ public class MiniProfiler : EditorWindow
         m_LevelAnalysisString += "- Physics objects (rigidbodies) count: " + rigidbodiesCount;
         m_LevelAnalysisString += k_NewLine;
         m_LevelAnalysisString += "- Lights count: " + lightsCount;
-        m_LevelAnalysisString += k_NewLine;
-        m_LevelAnalysisString += "- Enemy count: " + enemyCount;
 
         // Suggestions
         if (nonCombinedMeshCount > 50)

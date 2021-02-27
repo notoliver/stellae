@@ -18,11 +18,6 @@ public class TeleportPlayer : MonoBehaviour
         if (Input.GetKeyDown(activateKey))
         {
             m_PlayerCharacterController.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            Health playerHealth = m_PlayerCharacterController.GetComponent<Health>();
-            if(playerHealth)
-            {
-                playerHealth.Heal(999);
-            }
         }
     }
 
