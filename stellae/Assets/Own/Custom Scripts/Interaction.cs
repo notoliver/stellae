@@ -44,16 +44,23 @@ public class Interaction : MonoBehaviour
                         {
                             hitObject.SetActive(false);
                             Debug.Log("take");
-                            GetComponent<Inventory>().inventory.Add(selected.itemName);
+                            GetComponent<Inventory>().invUpdate(selected.itemName);
                         }
                         else if (selected.look)
                         {
-                            GetComponent<Inventory>().inventory.Add(selected.itemName);
-                            Debug.Log("look");
+                            if (!GetComponent<Inventory>().inventory.Contains(selected.itemName))
+                            {
+                                GetComponent<Inventory>().invUpdate(selected.itemName);
+                                Debug.Log("look");
+                            }
                         }
                         else if (selected.inspect)
                         {
                             Debug.Log("inspect");
+                        }
+                        else if (selected.assemble)
+                        {
+                            selected.assembleFunc();                          
                         }
                     }
                 }
