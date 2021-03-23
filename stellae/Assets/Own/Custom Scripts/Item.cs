@@ -5,5 +5,6 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public string itemName;
-    public bool[] properties = new bool[3]; //look, inspect, pickup
+    public float fadeDistCLOSE, fadeDistFAR, hitDistCLOSE, hitDistFAR;
+    public bool look, inspect, take;
 }

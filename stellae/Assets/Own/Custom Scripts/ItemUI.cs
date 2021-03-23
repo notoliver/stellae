@@ -6,6 +6,7 @@ public class ItemUI : MonoBehaviour
 {
     Camera cameraToLookAt;
     TextMesh textmesh;
+    Item item;
     public float scale(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
     {
         float OldRange = (OldMax - OldMin);
@@ -19,19 +20,20 @@ public class ItemUI : MonoBehaviour
     {
         cameraToLookAt = Camera.main;
         textmesh = GetComponent<TextMesh>();
+        item = transform.parent.gameObject.GetComponent<Item>();
     }
 
     // Update is called once per frame 
     void LateUpdate()
     {
         float Dist = Vector3.Distance(Camera.main.transform.position, transform.position);
-        if (Dist > 10)
+        if (Dist > item.fadeDistCLOSE)
         {
             textmesh.color = new Color(0, 0, 0, 0);
         }
-        if (Dist < 10 && Dist > 2)
+        if (Dist < item.fadeDistFAR && Dist > item.fadeDistCLOSE)
         {
-            float temp = scale(2, 10, 1, 0, Dist);
+            float temp = scale(item.fadeDistCLOSE, item.fadeDistFAR, 1, 0, Dist);
             textmesh.color = new Color(1, 1, 1, temp);
         }
         if(Dist < 2)
@@ -42,4 +44,3 @@ public class ItemUI : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(cameraToLookAt.transform.forward);
     }
 }
-

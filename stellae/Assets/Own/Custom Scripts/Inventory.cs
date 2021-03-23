@@ -5,4 +5,14 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public List<string> inventory = new List<string>();
+
+    void Start()
+    {
+
+    }
+
+    void Update()
+    {
+
+    }
 }
