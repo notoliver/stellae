@@ -1958,7 +1958,7 @@ AudioSource:
   m_GameObject: {fileID: 475052983}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3210723887655492284, guid: fcc71635aab95ff4fbdf1880bf2afa2f,
+  OutputAudioMixerGroup: {fileID: -136866609386734086, guid: c7baf3b74965bcc49be6d008f8436ab2,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: ef1d0f5592fd0d44fb4d020086c96b8d, type: 3}
   m_PlayOnAwake: 0
@@ -13315,7 +13315,7 @@ AudioSource:
   m_GameObject: {fileID: 2729281213404769783}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243216665894616700, guid: fcc71635aab95ff4fbdf1880bf2afa2f,
+  OutputAudioMixerGroup: {fileID: -7993430867455563923, guid: c7baf3b74965bcc49be6d008f8436ab2,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 7d26d5767b7c2d744ba725c0ef19ee96, type: 3}
   m_PlayOnAwake: 1
@@ -13779,21 +13779,6 @@ Transform:
   m_Father: {fileID: 2729281213673322026}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2768119268833297796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5790203944389090552}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2758505f22acf1d4e8dbb9e9e9ac6e85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stanceImage: {fileID: 0}
-  standingSprite: {fileID: 21300000, guid: 52709b32aa114154aa3f42f22d4d225c, type: 3}
-  crouchingSprite: {fileID: 21300000, guid: d9b0340e45d66d64199b8219686bb5c5, type: 3}
 --- !u!114 &4008933581102492885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13867,8 +13852,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8073978906825032892}
-  - component: {fileID: 6986112645054364431}
-  - component: {fileID: 2768119268833297796}
   - component: {fileID: 1183937471674198552}
   - component: {fileID: 6510790933300543070}
   - component: {fileID: 944632354259436185}
@@ -14003,20 +13986,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 95069494594661259}
   m_CullTransparentMesh: 0
---- !u!114 &6986112645054364431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5790203944389090552}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bb4b9b492a196d46b75760761528eeb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pollingTime: 0.2
-  uiText: {fileID: 0}
 --- !u!114 &7499487445571288953
 MonoBehaviour:
   m_ObjectHideFlags: 0
