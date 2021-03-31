@@ -16,9 +16,10 @@ public class InkDialogue : MonoBehaviour
     bool previouslyLoadedStory = false;
     string text = "";
 
+
+
     // === Create an event for a keyPress to make dialogue happen! (IMPORTANT) === //
     UnityEvent myEvent = new UnityEvent();
-
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,16 @@ public class InkDialogue : MonoBehaviour
     // Refresh the UI (called once per frame)
     void refresh()
     {
+        // =============== TRIGGERING DIALOGUE (COLLISION TRIGGER) =============== //
+        GameObject x = GameObject.Find("d_trigger");
+        varController var = x.GetComponent<varController>();
+
+        // -- Triggering dialogue -- //
+        if (var.dialogueTriggered == true)
+        {
+            isTalking = true;
+        }
+
         // =============== START CONVERSATION (F) =============== //
         if (Input.GetKeyDown(KeyCode.F) && isTalking == false)
         {
@@ -76,6 +87,7 @@ public class InkDialogue : MonoBehaviour
             if (previouslyLoadedStory == false)
             {
                 text = continueStory();
+                Debug.Log("continuing story");
                 previouslyLoadedStory = true;
             }
 
@@ -120,7 +132,8 @@ public class InkDialogue : MonoBehaviour
     void clearUI()
     {
         int childCount = this.transform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
+        // Changing i >= ___ to be the # of children we currently have -- this will prevent other HUD elements from being deleted
+        for (int i = childCount - 1; i >= 2; i--)
         {
             GameObject.Destroy(this.transform.GetChild(i).gameObject);
         }
@@ -135,7 +148,7 @@ public class InkDialogue : MonoBehaviour
             // Go to makeDialogueSelection //
             myEvent.Invoke();
         }
-
+        
         // Refresh
         refresh();
     }
