@@ -38,104 +38,25 @@ public class DetectionModule : MonoBehaviour
 
     public virtual void HandleTargetDetection(Actor actor, Collider[] selfColliders)
     {
-        // Handle known target detection timeout
-        if (knownDetectedTarget && !isSeeingTarget && (Time.time - m_TimeLastSeenTarget) > knownTargetTimeout)
-        {
-            knownDetectedTarget = null;
-        }
-
-        // Find the closest visible hostile actor
-        float sqrDetectionRange = detectionRange * detectionRange;
-        isSeeingTarget = false;
-        float closestSqrDistance = Mathf.Infinity;
-        foreach (Actor otherActor in m_ActorsManager.actors)
-        {
-            if (otherActor.affiliation != actor.affiliation)
-            {
-                float sqrDistance = (otherActor.transform.position - detectionSourcePoint.position).sqrMagnitude;
-                if (sqrDistance < sqrDetectionRange && sqrDistance < closestSqrDistance)
-                {
-                    // Check for obstructions
-                    RaycastHit[] hits = Physics.RaycastAll(detectionSourcePoint.position, (otherActor.aimPoint.position - detectionSourcePoint.position).normalized, detectionRange, -1, QueryTriggerInteraction.Ignore);
-                    RaycastHit closestValidHit = new RaycastHit();
-                    closestValidHit.distance = Mathf.Infinity;
-                    bool foundValidHit = false;
-                    foreach (var hit in hits)
-                    {
-                        if (!selfColliders.Contains(hit.collider) && hit.distance < closestValidHit.distance)
-                        {
-                            closestValidHit = hit;
-                            foundValidHit = true;
-                        }
-                    }
-
-                    if (foundValidHit)
-                    {
-                        Actor hitActor = closestValidHit.collider.GetComponentInParent<Actor>();
-                        if (hitActor == otherActor)
-                        {
-                            isSeeingTarget = true;
-                            closestSqrDistance = sqrDistance;
-
-                            m_TimeLastSeenTarget = Time.time;
-                            knownDetectedTarget = otherActor.aimPoint.gameObject;
-                        }
-                    }
-                }
-            }
-        }
-
-        isTargetInAttackRange = knownDetectedTarget != null && Vector3.Distance(transform.position, knownDetectedTarget.transform.position) <= attackRange;
-
-        // Detection events
-        if (!hadKnownTarget &&
-            knownDetectedTarget != null)
-        {
-            OnDetect();
-        }
-
-        if (hadKnownTarget &&
-            knownDetectedTarget == null)
-        {
-            OnLostTarget();
-        }
-
-        // Remember if we already knew a target (for next frame)
-        hadKnownTarget = knownDetectedTarget != null;
+        
     }
 
     public virtual void OnLostTarget()
     {
-        if (onLostTarget != null)
-        {
-            onLostTarget.Invoke();
-        }
-    }
 
+    }
     public virtual void OnDetect()
     {
-        if (onDetectedTarget != null)
-        {
-            onDetectedTarget.Invoke();
-        }
+
     }
 
     public virtual void OnDamaged(GameObject damageSource)
     {
-        m_TimeLastSeenTarget = Time.time;
-        knownDetectedTarget = damageSource;
 
-        if (animator)
-        {
-            animator.SetTrigger(k_AnimOnDamagedParameter);
-        }
     }
 
     public virtual void OnAttack()
     {
-        if (animator)
-        {
-            animator.SetTrigger(k_AnimAttackParameter);
-        }
+
     }
 }

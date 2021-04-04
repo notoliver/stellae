@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.7924528, g: 0.7482022, b: 0.6018156, a: 1}
+  m_FogColor: {r: 0.3301887, g: 0.30046916, b: 0.19780171, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.005
   m_LinearFogStart: 0
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: cc421da483ed06c49933077a621bff25, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: c5a0dc4f8ac2f964d8215e5d4e15297b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 382790015}
-  m_IndirectSpecularColor: {r: 0.2960994, g: 0.2539744, b: 0.3936012, a: 1}
+  m_IndirectSpecularColor: {r: 0.2108039, g: 0.17427406, b: 0.23958805, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2131,7 +2131,10 @@ MonoBehaviour:
   inspect: 0
   take: 0
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!23 &489066917
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2259,9 +2262,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6a6df342b52d24092cf6bbb590c535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveHeight: 0.5
-  waveFrequency: 0.5
-  waveLength: 0.75
+  waveHeight: 0.1
+  waveFrequency: 0.1
+  waveLength: 0.9
   waveOriginPosition: {x: 0, y: 0, z: 0}
 --- !u!23 &492033041
 MeshRenderer:
@@ -3233,7 +3236,10 @@ MonoBehaviour:
   inspect: 0
   take: 0
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!65 &705015448
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3566,7 +3572,10 @@ MonoBehaviour:
   inspect: 0
   take: 1
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!4 &778107395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5b51913d07f805546855136f7b5feb44,
@@ -4127,7 +4136,10 @@ MonoBehaviour:
   inspect: 1
   take: 0
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!4 &1022645966 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4009941363576130, guid: a8cba3361c8f7724e8899289f1efa8cc,
@@ -4569,17 +4581,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c07a35ead14434d0390671c2afbf4780,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.8732643
+      value: 17.480007
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c07a35ead14434d0390671c2afbf4780,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.1996746
+      value: -4.817478
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c07a35ead14434d0390671c2afbf4780,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.4270935
+      value: -66.83002
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c07a35ead14434d0390671c2afbf4780,
         type: 3}
@@ -11037,7 +11049,10 @@ MonoBehaviour:
   inspect: 0
   take: 0
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!4 &1555092918 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 441090, guid: ccbe3c5efe0bbed4bbe4b8651efb2db8,
@@ -13804,15 +13819,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1fea5cb3ddbc249bd0181e6766db68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endSceneLoadDelay: 4
-  endGameFadeCanvasGroup: {fileID: 0}
-  winSceneName: WinScene
-  delayBeforeFadeToBlack: 4
-  delayBeforeWinMessage: 1
-  victorySound: {fileID: 8300000, guid: a533219934975884e81c1add37af9930, type: 3}
-  WinGameMessagePrefab: {fileID: 3003312392959327722, guid: f981094eb6c2a6f4f8a56f85c606e3d1,
-    type: 3}
-  loseSceneName: LoseScene
 --- !u!4 &2729281213404769777
 Transform:
   m_ObjectHideFlags: 0
@@ -14175,7 +14181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8534e17a0f90604c9afd4f5c73d829f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Id: aa4cc354-6a1b-4706-bdfe-a15ac2463711
+  m_Id: 0fe3ff96-6db7-42e0-9d10-28f606f42172
 --- !u!4 &2729281214152228928 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
@@ -14371,12 +14377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55cca505d6267e94fbd3796f4f059ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchOrder: 0
-  replacements:
-  - SourcePrefab: {fileID: 2586967504729872886, guid: 2954f5c29859c9d448513c8bd60b3344,
-      type: 3}
-    TargetPrefab: {fileID: 8973077010322964242, guid: c72bc11376638fa4eb5c234327ecb266,
-      type: 3}
 --- !u!114 &4135835365990770239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14548,12 +14548,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55cca505d6267e94fbd3796f4f059ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchOrder: 0
-  replacements:
-  - SourcePrefab: {fileID: 4548416285556944926, guid: 3a36a90ed0609d9408c28bf4179603b0,
-      type: 3}
-    TargetPrefab: {fileID: 4548416285556944926, guid: 7ba64c0944716c24f911914e2e6af7a4,
-      type: 3}
 --- !u!4 &8073978906825032892
 Transform:
   m_ObjectHideFlags: 0

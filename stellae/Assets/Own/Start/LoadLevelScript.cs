@@ -9,6 +9,8 @@ public class LoadLevelScript : MonoBehaviour {
 	public string levelToLoad;
 
 	public void ApplicationLoadLevel(){
-		SceneManager.LoadScene (levelToLoad);
+		SceneManager.LoadScene(levelToLoad);
+		
+		//SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelToLoad));
 	}
 }

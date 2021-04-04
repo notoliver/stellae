@@ -2204,7 +2204,10 @@ MonoBehaviour:
   inspect: 0
   take: 0
   assemble: 0
+  assembleUnique: 0
   assembleItems: []
+  assembleItemsNums: 
+  thoughts: []
 --- !u!23 &489066917
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2332,9 +2335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6a6df342b52d24092cf6bbb590c535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveHeight: 0.5
-  waveFrequency: 0.5
-  waveLength: 0.75
+  waveHeight: 0.1
+  waveFrequency: 0.1
+  waveLength: 0.9
   waveOriginPosition: {x: 0, y: 0, z: 0}
 --- !u!23 &492033041
 MeshRenderer:
@@ -13516,15 +13519,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1fea5cb3ddbc249bd0181e6766db68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endSceneLoadDelay: 4
-  endGameFadeCanvasGroup: {fileID: 0}
-  winSceneName: WinScene
-  delayBeforeFadeToBlack: 4
-  delayBeforeWinMessage: 1
-  victorySound: {fileID: 8300000, guid: a533219934975884e81c1add37af9930, type: 3}
-  WinGameMessagePrefab: {fileID: 3003312392959327722, guid: f981094eb6c2a6f4f8a56f85c606e3d1,
-    type: 3}
-  loseSceneName: LoseScene
 --- !u!4 &2729281213404769777
 Transform:
   m_ObjectHideFlags: 0
