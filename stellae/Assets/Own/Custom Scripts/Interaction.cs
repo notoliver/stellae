@@ -31,6 +31,12 @@ public class Interaction : MonoBehaviour
                     Item selected = hitObject.GetComponent<Item>();
                     if (Dist > selected.hitDistCLOSE && Dist < selected.hitDistFAR)
                     {
+                        //============= TEMPORARY ===============
+                        if(selected.itemName == "marvinwake")
+                        {
+                            GameObject.Find("wakingscript").GetComponent<LoadLevelScript>().ApplicationLoadLevel();
+                        }
+                        //============= TEMPORARY ===============
                         if (selected.take)
                         {
                             bool added = GetComponent<Inventory>().invUpdate(selected.itemName);

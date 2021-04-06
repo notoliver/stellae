@@ -5,28 +5,28 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Own/Start/StartScreen.unity
-    guid: 3ab613c7ee540c24ab15707a15ff7471
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Own/Scenes/0_Startscreen.unity
+    guid: 4613824d27587dd47926b05b799589cf
+  - enabled: 1
     path: Assets/Own/Scenes/1_Intro.unity
     guid: 099625c4a216fc04c9da3fdcec416c4b
   - enabled: 1
     path: Assets/Own/Scenes/2_Freeroam1.unity
     guid: 2b7a7c4d1da21de4c91826ab82db775f
-  - enabled: 0
+  - enabled: 1
     path: Assets/Own/Scenes/3_Fishing.unity
     guid: 40b9c4b07cc2f4c4aa8d014a02f91107
-  - enabled: 0
+  - enabled: 1
     path: Assets/Own/Scenes/4_Freeroam2.unity
     guid: 5ba9935f82d1c604593355e182fc139e
-  - enabled: 0
+  - enabled: 1
     path: Assets/Own/Scenes/5_Campfire.unity
     guid: 8342235238140814799668a0d3b005fd
-  - enabled: 0
+  - enabled: 1
     path: Assets/Own/Scenes/6_Freeroam3.unity
     guid: b96054504508601418c223292daf8693
-  - enabled: 0
+  - enabled: 1
     path: Assets/Own/Scenes/7_Stargazing.unity
     guid: e91b2de6757b4e941812da39aff1dd3d
   m_configObjects: {}
