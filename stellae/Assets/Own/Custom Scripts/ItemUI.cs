@@ -27,18 +27,18 @@ public class ItemUI : MonoBehaviour
     void LateUpdate()
     {
         float Dist = Vector3.Distance(Camera.main.transform.position, transform.position);
-        if (Dist > item.fadeDistCLOSE)
+        if (Dist > item.fadeDistFAR)
         {
             textmesh.color = new Color(0, 0, 0, 0);
         }
         if (Dist < item.fadeDistFAR && Dist > item.fadeDistCLOSE)
         {
-            float temp = scale(item.fadeDistCLOSE, item.fadeDistFAR, 1, 0, Dist);
+            float temp = scale(item.fadeDistCLOSE, item.fadeDistFAR, 0.8f, 0, Dist);
             textmesh.color = new Color(1, 1, 1, temp);
         }
         if(Dist < 2)
         {
-            textmesh.color = new Color(1, 1, 1, 1);
+            textmesh.color = new Color(1, 1, 1, 0.8f);
         }
         transform.LookAt(cameraToLookAt.transform);
         transform.rotation = Quaternion.LookRotation(cameraToLookAt.transform.forward);

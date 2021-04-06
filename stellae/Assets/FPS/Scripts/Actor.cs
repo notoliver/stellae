@@ -6,8 +6,6 @@ public class Actor : MonoBehaviour
 {
     [Tooltip("Represents the affiliation (or team) of the actor. Actors of the same affiliation are friendly to eachother")]
     public int affiliation;
-    [Tooltip("Represents point where other actors will aim when they attack this actor")]
-    public Transform aimPoint;
 
     ActorsManager m_ActorsManager;
 

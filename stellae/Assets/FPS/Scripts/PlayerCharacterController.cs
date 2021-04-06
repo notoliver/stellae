@@ -38,9 +38,6 @@ public class PlayerCharacterController : MonoBehaviour
     [Header("Rotation")]
     [Tooltip("Rotation speed for moving the camera")]
     public float rotationSpeed = 200f;
-    [Range(0.1f, 1f)]
-    [Tooltip("Rotation speed multiplier when aiming")]
-    public float aimingRotationMultiplier = 0.4f;
 
     [Header("Jump")]
     [Tooltip("Force applied upward when jumping")]
@@ -356,7 +353,6 @@ public class PlayerCharacterController : MonoBehaviour
             m_Controller.height = m_TargetCharacterHeight;
             m_Controller.center = Vector3.up * m_Controller.height * 0.5f;
             playerCamera.transform.localPosition = Vector3.up * m_TargetCharacterHeight * cameraHeightRatio;
-            m_Actor.aimPoint.transform.localPosition = m_Controller.center;
         }
         // Update smooth height
         else if (m_Controller.height != m_TargetCharacterHeight)
@@ -365,7 +361,6 @@ public class PlayerCharacterController : MonoBehaviour
             m_Controller.height = Mathf.Lerp(m_Controller.height, m_TargetCharacterHeight, crouchingSharpness * Time.deltaTime);
             m_Controller.center = Vector3.up * m_Controller.height * 0.5f;
             playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.up * m_TargetCharacterHeight * cameraHeightRatio, crouchingSharpness * Time.deltaTime);
-            m_Actor.aimPoint.transform.localPosition = m_Controller.center;
         }
     }
 

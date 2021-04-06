@@ -65,61 +65,31 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool GetJumpInputDown()
     {
-        if (CanProcessInput())
-        {
-            return Input.GetButtonDown(GameConstants.k_ButtonNameJump);
-        }
-
         return false;
     }
 
     public bool GetJumpInputHeld()
     {
-        if (CanProcessInput())
-        {
-            return Input.GetButton(GameConstants.k_ButtonNameJump);
-        }
-
         return false;
     }
 
     public bool GetFireInputDown()
     {
-        return GetFireInputHeld() && !m_FireInputWasHeld;
+        return false;
     }
 
     public bool GetFireInputReleased()
     {
-        return !GetFireInputHeld() && m_FireInputWasHeld;
+        return false;
     }
 
     public bool GetFireInputHeld()
     {
-        if (CanProcessInput())
-        {
-            bool isGamepad = Input.GetAxis(GameConstants.k_ButtonNameGamepadFire) != 0f;
-            if (isGamepad)
-            {
-                return Input.GetAxis(GameConstants.k_ButtonNameGamepadFire) >= triggerAxisThreshold;
-            }
-            else
-            {
-                return Input.GetButton(GameConstants.k_ButtonNameFire);
-            }
-        }
-
         return false;
     }
 
     public bool GetAimInputHeld()
     {
-        if (CanProcessInput())
-        {
-            bool isGamepad = Input.GetAxis(GameConstants.k_ButtonNameGamepadAim) != 0f;
-            bool i = isGamepad ? (Input.GetAxis(GameConstants.k_ButtonNameGamepadAim) > 0f) : Input.GetButton(GameConstants.k_ButtonNameAim);
-            return i;
-        }
-
         return false;
     }
 
@@ -135,65 +105,21 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool GetCrouchInputDown()
     {
-        if (CanProcessInput())
-        {
-            return Input.GetButtonDown(GameConstants.k_ButtonNameCrouch);
-        }
-
         return false;
     }
 
     public bool GetCrouchInputReleased()
     {
-        if (CanProcessInput())
-        {
-            return Input.GetButtonUp(GameConstants.k_ButtonNameCrouch);
-        }
-
         return false;
     }
 
     public int GetSwitchWeaponInput()
     {
-        if (CanProcessInput())
-        {
-
-            bool isGamepad = Input.GetAxis(GameConstants.k_ButtonNameGamepadSwitchWeapon) != 0f;
-            string axisName = isGamepad ? GameConstants.k_ButtonNameGamepadSwitchWeapon : GameConstants.k_ButtonNameSwitchWeapon;
-
-            if (Input.GetAxis(axisName) > 0f)
-                return -1;
-            else if (Input.GetAxis(axisName) < 0f)
-                return 1;
-            else if (Input.GetAxis(GameConstants.k_ButtonNameNextWeapon) > 0f)
-                return -1;
-            else if (Input.GetAxis(GameConstants.k_ButtonNameNextWeapon) < 0f)
-                return 1;
-        }
-
         return 0;
     }
 
     public int GetSelectWeaponInput()
     {
-        if (CanProcessInput())
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                return 1;
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-                return 2;
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-                return 3;
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-                return 4;
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-                return 5;
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-                return 6;
-            else
-                return 0;
-        }
-
         return 0;
     }
 

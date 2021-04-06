@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using Ink.Runtime;
+using System.Threading.Tasks;
+using System.Timers;
 
 public class InkDialogue : MonoBehaviour
 {
-
+    // ============= VARIABLES ============= //
     private Story story;
     public TextAsset inkJSONAsset;
     public Button buttonPrefab;
@@ -15,11 +17,20 @@ public class InkDialogue : MonoBehaviour
     bool storyLoaded = false;
     bool previouslyLoadedStory = false;
     string text = "";
+    int delay_time = 0;
+    bool started_delay = false;
+    public Font myFont;
 
 
 
-    // === Create an event for a keyPress to make dialogue happen! (IMPORTANT) === //
+    // === Create an event for a keyPress to make dialogue choices happen! (IMPORTANT) === //
     UnityEvent myEvent = new UnityEvent();
+    // == Event to advance to next line of dialogue using ENTER key (no choices) == //
+    UnityEvent enter_Event = new UnityEvent();
+
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,8 +38,10 @@ public class InkDialogue : MonoBehaviour
         // 1. The ink file will be loaded as a new Story object //
         story = new Story(inkJSONAsset.text);
 
-        // 2. Add a listener to the event -- event sends to --> makeDialogueSelection (IMPORTANT)
+        // 2. Add a listener to the events
+        // myEvent sends to --> makeDialogueSelection (IMPORTANT)
         myEvent.AddListener(makeDialogueSelection);
+        enter_Event.AddListener(nextLineOfDialogue);
 
         // 3. Start the refresh cycle //
         Debug.Log("start refresh");
@@ -38,12 +51,13 @@ public class InkDialogue : MonoBehaviour
 
 
 
+
     // Refresh the UI (called once per frame)
     void refresh()
     {
-        // =============== TRIGGERING DIALOGUE (COLLISION TRIGGER) =============== //
+        // =============== 1. TRIGGERING DIALOGUE (COLLISION TRIGGER) =============== //
         GameObject x = GameObject.Find("d_trigger");
-        varController var = x.GetComponent<varController>();
+        activateTrigger var = x.GetComponent<activateTrigger>();
 
         // -- Triggering dialogue -- //
         if (var.dialogueTriggered == true)
@@ -51,14 +65,14 @@ public class InkDialogue : MonoBehaviour
             isTalking = true;
         }
 
-        // =============== START CONVERSATION (F) =============== //
+        // =============== 2. START CONVERSATION (F) =============== //
         if (Input.GetKeyDown(KeyCode.F) && isTalking == false)
         {
             Debug.Log("starting convo");
             isTalking = true;
         }
 
-        // =============== END CONVERSATION (X) =============== //
+        // =============== 3. END CONVERSATION (X) =============== //
         if (Input.GetKeyDown(KeyCode.X) && isTalking == true)
         {
             Debug.Log("ending convo");
@@ -67,7 +81,7 @@ public class InkDialogue : MonoBehaviour
             clearUI();
         }
 
-        // =============== 3. LOADING STORY (if necessary) =============== //
+        // =============== 4. LOADING STORY (if necessary) =============== //
         if (isTalking == true && storyLoaded == false)
         {
             // Clear the UI
@@ -75,15 +89,21 @@ public class InkDialogue : MonoBehaviour
 
             // Create a new GameObject
             GameObject newGameObject = new GameObject("TextChunk");
-            // Set its transform to the Canvas (this)
-            newGameObject.transform.SetParent(this.transform, false);
 
-            // Add a new Text component to the new GameObject
+            // Get transform of Dialogue (child of HUD)
+            GameObject dialogue = GameObject.Find("Dialogue");
+            Transform t = dialogue.GetComponent<Transform>();
+
+            // Set its transform to the Dialogue child (this.t)
+            newGameObject.transform.SetParent(t.transform, false);
+            
+            // Add a new Text component to the new GameObject (like what we did with dialogueTriggered)
             Text newTextObject = newGameObject.AddComponent<Text>();
-            // Set the fontSize larger
-            newTextObject.fontSize = 24;
-            // Set the text from new story block
 
+            // Set the fontSize larger
+            newTextObject.fontSize = 40;
+
+            // Set the text from new story block
             if (previouslyLoadedStory == false)
             {
                 text = continueStory();
@@ -111,13 +131,13 @@ public class InkDialogue : MonoBehaviour
 
 
             // Load Arial from the built-in resources
-            newTextObject.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            newTextObject.font = myFont;
 
             // Create buttons //
             foreach (Choice choice in story.currentChoices)
             {
                 Button choiceButton = Instantiate(buttonPrefab) as Button;
-                choiceButton.transform.SetParent(this.transform, false);
+                choiceButton.transform.SetParent(t.transform, false);
 
                 // Gets the text from the button prefab
                 Text choiceText = choiceButton.GetComponentInChildren<Text>();
@@ -128,18 +148,38 @@ public class InkDialogue : MonoBehaviour
     }
 
 
-    // Clear out all of the UI, calling Destroy() in reverse
+
+
+
+
+    // ============= Clear out all of the UI, calling Destroy() in reverse ============= //
     void clearUI()
     {
+        // === 1. Destroy HUD children === //
         int childCount = this.transform.childCount;
         // Changing i >= ___ to be the # of children we currently have -- this will prevent other HUD elements from being deleted
-        for (int i = childCount - 1; i >= 2; i--)
+        for (int i = childCount - 1; i >= 4; i--)
         {
             GameObject.Destroy(this.transform.GetChild(i).gameObject);
         }
+        // === 2. Get transform of Dialogue (child of HUD) === //
+        GameObject dialogue = GameObject.Find("Dialogue");
+        Transform t = dialogue.GetComponent<Transform>();
+
+        // === 3. Destroy children of Dialogue child === //
+        int dialogue_child_count = t.transform.childCount;
+
+        for (int i = dialogue_child_count - 1; i >= 0; i--)
+        {
+            GameObject.Destroy(t.transform.GetChild(i).gameObject);
+        }
     }
 
-    // Update is called once per frame
+
+
+
+
+    // ============= UPDATE ============= //
     void Update()
     {
         // Listener (input during convo) -- this is why the choices are pressed!!! //
@@ -148,12 +188,21 @@ public class InkDialogue : MonoBehaviour
             // Go to makeDialogueSelection //
             myEvent.Invoke();
         }
+        else if ((Input.GetKeyDown(KeyCode.Return))||Input.GetKeyDown(KeyCode.Space))
+        {
+            // Go to continueStory()
+            enter_Event.Invoke();
+        }
         
         // Refresh
         refresh();
     }
 
-    // Verify existence and load the next part of the story //
+
+
+
+
+    // ============= Verify existence and load the next part of the story ============= //
     string continueStory()
     {
         string text = "";
@@ -162,11 +211,31 @@ public class InkDialogue : MonoBehaviour
         if (story.canContinue)
         {
             // Will continue the story until the next set of choices is found //
-            text = story.ContinueMaximally();
+            text = story.Continue();
         }
 
         return text;
     }
+
+
+
+
+
+    // ============= Meant for advancing the story when NO CHOICES are present ============= //
+    void nextLineOfDialogue()
+    {
+        int numberOfChoices = story.currentChoices.Count;
+
+        // Reset variables //
+        if (numberOfChoices == 0)
+        {
+            storyLoaded = false;
+            previouslyLoadedStory = false;
+        }
+    }
+
+
+
 
 
     // ========== NUMBER KEY PRESS TRACKER ========== //
@@ -199,7 +268,12 @@ public class InkDialogue : MonoBehaviour
         }
     }
 
-    // NEW VERSION OF DIALOGUE SELECTION //
+
+
+
+
+
+    // ============= NEW VERSION OF DIALOGUE SELECTION ============= //
     void makeDialogueSelection()
     {
 
@@ -226,11 +300,23 @@ public class InkDialogue : MonoBehaviour
 
         }
     }
+
+
+
+
+    /* ===== TIME DELAY FUNCTION (FAILED) ===== */
+    IEnumerator timeDelay()
+    {
+        Debug.Log("Started Coroutine at :" + Time.time);
+        yield return new WaitForSeconds(5);
+        delay_time = delay_time + 1;
+        Debug.Log("Ended at: " + Time.time);
+    }
 }
 
 /* Credit to Dan Cox for some sections of code used in:
 
-    * Section 3 (LOADING STORY) of refresh() function
-    * clearUI() functionality
+    * Section 4 (LOADING STORY) of refresh() function
+    * Part of clearUI() functionality
      
 */

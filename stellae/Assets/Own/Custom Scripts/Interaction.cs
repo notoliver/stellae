@@ -13,14 +13,6 @@ public class Interaction : MonoBehaviour
         interaction();
 
         zoom();
-        
-        if (Input.GetKeyDown(KeyCode.R)) //R debug
-        {
-            for (int i = 0; i < GetComponent<Inventory>().inventory.Count; i++)
-            {
-                Debug.Log(GetComponent<Inventory>().inventory[i]);
-            }          
-        }
     }
 
     void interaction()
@@ -37,26 +29,48 @@ public class Interaction : MonoBehaviour
                 {
                     float Dist = Vector3.Distance(Camera.main.transform.position, hitObject.transform.position);
                     Item selected = hitObject.GetComponent<Item>();
-
                     if (Dist > selected.hitDistCLOSE && Dist < selected.hitDistFAR)
                     {
+                        //============= TEMPORARY ===============
+                        if(selected.itemName == "marvinwake")
+                        {
+                            GameObject.Find("wakingscript").GetComponent<LoadLevelScript>().ApplicationLoadLevel();
+                        }
+                        //============= TEMPORARY ===============
                         if (selected.take)
                         {
-                            hitObject.SetActive(false);
-                            Debug.Log("take");
-                            GetComponent<Inventory>().invUpdate(selected.itemName);
+                            bool added = GetComponent<Inventory>().invUpdate(selected.itemName);
+                            if (added)
+                            {
+                                if(selected.thoughts.Count != 0) { 
+                                    int rand = Random.Range(0, selected.thoughts.Count); 
+                                    GetComponent<Thought>().Think(selected.thoughts[rand]); //thought
+                                }
+                                hitObject.SetActive(false);
+                            }
                         }
                         else if (selected.look)
                         {
                             if (!GetComponent<Inventory>().inventory.Contains(selected.itemName))
                             {
+                                if (selected.assembleUnique) //keep object, disable text
+                                {
+                                    hitObject.transform.GetChild(0).gameObject.SetActive(false);
+                                }
+                                if (selected.thoughts.Count != 0) //thought
+                                {
+                                    int rand = Random.Range(0, selected.thoughts.Count);
+                                    Debug.Log(rand);
+                                    GetComponent<Thought>().Think(selected.thoughts[rand]);
+                                }
                                 GetComponent<Inventory>().invUpdate(selected.itemName);
-                                Debug.Log("look");
                             }
                         }
                         else if (selected.inspect)
                         {
                             Debug.Log("inspect");
+                            int rand = Random.Range(0, selected.thoughts.Count);
+                            GetComponent<Thought>().Think(selected.thoughts[rand]); //thought
                         }
                         else if (selected.assemble)
                         {
