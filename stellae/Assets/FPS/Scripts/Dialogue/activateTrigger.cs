@@ -22,6 +22,8 @@ using UnityEngine;
 public class activateTrigger : MonoBehaviour
 {
     public bool dialogueTriggered;
+    public long time;
+    public bool started_watch;
     // == For delaying Update() == //
     int i = 0;
 
@@ -31,6 +33,8 @@ public class activateTrigger : MonoBehaviour
     void Start()
     {
         dialogueTriggered = false;
+        time = 0;
+        started_watch = false;
     }
 
     // Update is called once per frame

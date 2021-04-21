@@ -36,7 +36,7 @@ public class Interaction : MonoBehaviour
                         {
                             GameObject.Find("wakingscript").GetComponent<LoadLevelScript>().ApplicationLoadLevel();
                         }
-                        //============= TEMPORARY ===============
+
                         if (selected.take)
                         {
                             bool added = GetComponent<Inventory>().invUpdate(selected.itemName);
@@ -48,6 +48,41 @@ public class Interaction : MonoBehaviour
                                 }
                                 hitObject.SetActive(false);
                             }
+                        }
+                        else if (selected.bird)
+                        {
+                            Debug.Log("bird");
+                            if(selected.itemName == "Crow")
+                            {
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().crow = true;
+                            }
+                            if (selected.itemName == "Cardinal")
+                            {
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().cardinal = true;
+                            }
+                            if (selected.itemName == "Bluejay")
+                            {
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().bluejay = true;
+                            }
+                            if (selected.itemName == "Hummingbird")
+                            {
+                                Debug.Log("bird");
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().hummingbird = true;
+                            }
+                            if (selected.itemName == "Tanager")
+                            {
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().tanager = true;
+                            }
+                            if (selected.itemName == "Lark")
+                            {
+                                GameObject.Find("birdinventory").GetComponent<PermaInv>().lark = true;
+                            }
+                            if (selected.thoughts.Count != 0)
+                            {
+                                int rand = Random.Range(0, selected.thoughts.Count);
+                                GetComponent<Thought>().Think(selected.thoughts[rand]); //thought
+                            }
+                            GameObject.Find("birdinventory").GetComponent<PermaInv>().updateJournal();
                         }
                         else if (selected.look)
                         {

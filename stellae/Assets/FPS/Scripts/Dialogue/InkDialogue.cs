@@ -6,6 +6,9 @@ using UnityEngine.Events;
 using Ink.Runtime;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Diagnostics;
+using System.Threading;
+using System;
 
 public class InkDialogue : MonoBehaviour
 {
@@ -18,8 +21,11 @@ public class InkDialogue : MonoBehaviour
     bool previouslyLoadedStory = false;
     string text = "";
     int delay_time = 0;
-    bool started_delay = false;
+    bool show_Buttons = false;
+    int num = 0;
     public Font myFont;
+    public GameObject endObject;
+    bool setThought = false;
 
 
 
@@ -27,6 +33,7 @@ public class InkDialogue : MonoBehaviour
     UnityEvent myEvent = new UnityEvent();
     // == Event to advance to next line of dialogue using ENTER key (no choices) == //
     UnityEvent enter_Event = new UnityEvent();
+
 
 
 
@@ -44,9 +51,11 @@ public class InkDialogue : MonoBehaviour
         enter_Event.AddListener(nextLineOfDialogue);
 
         // 3. Start the refresh cycle //
-        Debug.Log("start refresh");
+        UnityEngine.Debug.Log("start refresh");
         refresh();
     }
+
+
 
 
 
@@ -68,14 +77,14 @@ public class InkDialogue : MonoBehaviour
         // =============== 2. START CONVERSATION (F) =============== //
         if (Input.GetKeyDown(KeyCode.F) && isTalking == false)
         {
-            Debug.Log("starting convo");
+            UnityEngine.Debug.Log("starting convo");
             isTalking = true;
         }
 
         // =============== 3. END CONVERSATION (X) =============== //
         if (Input.GetKeyDown(KeyCode.X) && isTalking == true)
         {
-            Debug.Log("ending convo");
+            UnityEngine.Debug.Log("ending convo");
             isTalking = false;
             storyLoaded = false;
             clearUI();
@@ -96,18 +105,18 @@ public class InkDialogue : MonoBehaviour
 
             // Set its transform to the Dialogue child (this.t)
             newGameObject.transform.SetParent(t.transform, false);
-            
+
             // Add a new Text component to the new GameObject (like what we did with dialogueTriggered)
             Text newTextObject = newGameObject.AddComponent<Text>();
 
             // Set the fontSize larger
-            newTextObject.fontSize = 40;
+            newTextObject.fontSize = 36;
 
             // Set the text from new story block
             if (previouslyLoadedStory == false)
             {
                 text = continueStory();
-                Debug.Log("continuing story");
+                UnityEngine.Debug.Log("continuing story");
                 previouslyLoadedStory = true;
             }
 
@@ -126,26 +135,56 @@ public class InkDialogue : MonoBehaviour
             else
             {
                 newTextObject.text = text;
+                StartCoroutine(FadeTextToFullAlpha(1f, newTextObject));
+
             }
 
 
 
             // Load Arial from the built-in resources
             newTextObject.font = myFont;
+            newTextObject.fontSize = 36;
+
+
+            // ===== Use Stopwatch to delay time ===== //
+            Stopwatch stopWatch = new Stopwatch();
+
+            // Gives you total # of seconds
+            var.time = stopWatch.ElapsedMilliseconds;
+            // Time keeps updating as 0 no matter what //
+
+            /*if (var.time == 0 && var.started_watch == false)
+            {
+                UnityEngine.Debug.Log("Before starting the stopwatch");
+                var.started_watch = true;
+                stopWatch.Start();
+            }*/
+
+
 
             // Create buttons //
-            foreach (Choice choice in story.currentChoices)
+            if (var.time > 5 || show_Buttons == true)
             {
-                Button choiceButton = Instantiate(buttonPrefab) as Button;
-                choiceButton.transform.SetParent(t.transform, false);
+                stopWatch.Stop();
+                foreach (Choice choice in story.currentChoices)
+                {
+                    Button choiceButton = Instantiate(buttonPrefab) as Button;
+                    choiceButton.transform.SetParent(t.transform, false);
 
-                // Gets the text from the button prefab
-                Text choiceText = choiceButton.GetComponentInChildren<Text>();
-                choiceText.text = " " + (choice.index + 1) + ". " + choice.text;
+                    // Gets the text from the button prefab
+                    Text choiceText = choiceButton.GetComponentInChildren<Text>();
+                    choiceText.fontSize = 30;
+                    choiceText.text = " " + (choice.index + 1) + ". " + choice.text;
+                }
+                storyLoaded = true;
+                var.time = 0;
+                var.started_watch = false;
+                show_Buttons = false;
             }
-            storyLoaded = true;
         }
     }
+
+
 
 
 
@@ -158,10 +197,11 @@ public class InkDialogue : MonoBehaviour
         // === 1. Destroy HUD children === //
         int childCount = this.transform.childCount;
         // Changing i >= ___ to be the # of children we currently have -- this will prevent other HUD elements from being deleted
-        for (int i = childCount - 1; i >= 4; i--)
+        for (int i = childCount - 1; i >= 5; i--)
         {
             GameObject.Destroy(this.transform.GetChild(i).gameObject);
         }
+
         // === 2. Get transform of Dialogue (child of HUD) === //
         GameObject dialogue = GameObject.Find("Dialogue");
         Transform t = dialogue.GetComponent<Transform>();
@@ -179,6 +219,9 @@ public class InkDialogue : MonoBehaviour
 
 
 
+
+
+
     // ============= UPDATE ============= //
     void Update()
     {
@@ -188,15 +231,28 @@ public class InkDialogue : MonoBehaviour
             // Go to makeDialogueSelection //
             myEvent.Invoke();
         }
-        else if ((Input.GetKeyDown(KeyCode.Return))||Input.GetKeyDown(KeyCode.Space))
+        else if ((Input.GetKeyDown(KeyCode.Return)) || (Input.GetKeyDown(KeyCode.Space)))
         {
             // Go to continueStory()
             enter_Event.Invoke();
         }
-        
+
+        // == Set the dialogueTriggered to be false after 10 frames == //
+        if (num < 10)
+        {
+            num++;
+        }
+        else if (num == 10)
+        {
+            show_Buttons = true;
+            num = 0;
+        }
+
         // Refresh
         refresh();
+        checkEnd();
     }
+
 
 
 
@@ -216,6 +272,7 @@ public class InkDialogue : MonoBehaviour
 
         return text;
     }
+
 
 
 
@@ -279,8 +336,8 @@ public class InkDialogue : MonoBehaviour
 
         // 1. Call getNumberPressed() //
         int number = getNumberKeyPressed();
-        Debug.Log("Number is: ");
-        Debug.Log(number);
+        UnityEngine.Debug.Log("Number is: ");
+        UnityEngine.Debug.Log(number);
 
 
         // 2. Check that number generated is a valid choice number //
@@ -289,7 +346,7 @@ public class InkDialogue : MonoBehaviour
         {
 
             // 3. If it is... make the choice //
-            Debug.Log("Choice made");
+            UnityEngine.Debug.Log("Choice made");
             // NOTE: 1st choice = index 0 ------ 2nd choice = index 1 ----- etc. (for any given set of dialogue)
             story.ChooseChoiceIndex(number - 1);
 
@@ -304,19 +361,62 @@ public class InkDialogue : MonoBehaviour
 
 
 
+    // ===== CHECK END --> SCENE TRANSITION ===== //
+    void checkEnd()
+    {
+        if (!story.canContinue && story.currentChoices.Count == 0)
+        {
+            if (setThought == false)
+            {
+                //GameObject.Find("Player").GetComponent<Thought>().Think("Press Space to continue to the next scene.");
+                setThought = true;
+            }
+
+            // Add a delay //
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                endObject.GetComponent<LoadLevelScript>().ApplicationLoadLevel();
+            }
+        }
+    }
+
+
+
+
+
     /* ===== TIME DELAY FUNCTION (FAILED) ===== */
     IEnumerator timeDelay()
     {
-        Debug.Log("Started Coroutine at :" + Time.time);
+        UnityEngine.Debug.Log("Started Coroutine at :" + Time.time);
         yield return new WaitForSeconds(5);
         delay_time = delay_time + 1;
-        Debug.Log("Ended at: " + Time.time);
+        UnityEngine.Debug.Log("Ended at: " + Time.time);
     }
+
+
+
+
+
+
+    // ========== TEXT FADE ========== //
+    public IEnumerator FadeTextToFullAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+        while (i.color.a < 1.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a + (Time.deltaTime / t));
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeTextToZeroAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 1);
+        while (i.color.a > 0.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a - (Time.deltaTime / t));
+            yield return null;
+        }
+    }
+
 }
-
-/* Credit to Dan Cox for some sections of code used in:
-
-    * Section 4 (LOADING STORY) of refresh() function
-    * Part of clearUI() functionality
-     
-*/

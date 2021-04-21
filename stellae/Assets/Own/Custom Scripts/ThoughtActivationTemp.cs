@@ -7,7 +7,7 @@ public class ThoughtActivationTemp : MonoBehaviour
     public List<GameObject> objects;
     public GameObject player;
     public string thought;
-    bool shot;
+    public bool shot;
 
     void start()
     {
@@ -20,7 +20,7 @@ public class ThoughtActivationTemp : MonoBehaviour
         {
             foreach (GameObject ok in objects)
             {
-                if (!ok.activeSelf)
+                if (ok.activeSelf != true)
                 {
                     Debug.Log("inactive");
                     return;

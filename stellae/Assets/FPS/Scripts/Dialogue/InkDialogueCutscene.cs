@@ -6,6 +6,10 @@ using UnityEngine.Events;
 using Ink.Runtime;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Diagnostics;
+using System.Threading;
+using System;
+using UnityEngine.SceneManagement;
 
 public class InkDialogueCutscene : MonoBehaviour
 {
@@ -21,7 +25,12 @@ public class InkDialogueCutscene : MonoBehaviour
     bool started_delay = false;
     public GameObject endObject;
     public Font myFont;
-
+    int num = 0;
+    bool show_Buttons = false;
+    bool setThought = false;
+    bool stopWatch_started = false;
+    // ===== Use Stopwatch to delay time ===== //
+    Stopwatch stopWatch = new Stopwatch();
 
     // === Create an event for a keyPress to make dialogue choices happen! (IMPORTANT) === //
     UnityEvent myEvent = new UnityEvent();
@@ -44,7 +53,7 @@ public class InkDialogueCutscene : MonoBehaviour
         enter_Event.AddListener(nextLineOfDialogue);
 
         // 3. Start the refresh cycle //
-        Debug.Log("start refresh");
+        UnityEngine.Debug.Log("start refresh");
         refresh();
     }
 
@@ -56,7 +65,7 @@ public class InkDialogueCutscene : MonoBehaviour
     void refresh()
     {
        
-        // =============== 4. LOADING STORY (if necessary) =============== //
+        // =============== 1. LOADING STORY =============== //
         if (isTalking == true && storyLoaded == false)
         {
             // Clear the UI
@@ -82,7 +91,7 @@ public class InkDialogueCutscene : MonoBehaviour
             if (previouslyLoadedStory == false)
             {
                 text = continueStory();
-                Debug.Log("continuing story");
+                UnityEngine.Debug.Log("continuing story");
                 previouslyLoadedStory = true;
             }
 
@@ -92,8 +101,7 @@ public class InkDialogueCutscene : MonoBehaviour
             // Get the current tags (if any)
             List<string> tags = story.currentTags;
 
-            // If there are tags, use the first one.
-            // Otherwise, just show the text.
+            // If there are tags, use the first one. Otherwise, just show the text.
             if (tags.Count > 0)
             {
                 newTextObject.text = "<color=grey>" + tags[0] + "</color> – " + text;
@@ -101,6 +109,7 @@ public class InkDialogueCutscene : MonoBehaviour
             else
             {
                 newTextObject.text = text;
+                StartCoroutine(FadeTextToFullAlpha(1f, newTextObject));
             }
 
 
@@ -111,14 +120,18 @@ public class InkDialogueCutscene : MonoBehaviour
             // Create buttons //
             foreach (Choice choice in story.currentChoices)
             {
-                Button choiceButton = Instantiate(buttonPrefab) as Button;
-                choiceButton.transform.SetParent(t.transform, false);
+                if (show_Buttons == true)
+                {
+                    Button choiceButton = Instantiate(buttonPrefab) as Button;
+                    choiceButton.transform.SetParent(t.transform, false);
 
-                // Gets the text from the button prefab
-                Text choiceText = choiceButton.GetComponentInChildren<Text>();
-                choiceText.text = " " + (choice.index + 1) + ". " + choice.text;
+                    // Gets the text from the button prefab
+                    Text choiceText = choiceButton.GetComponentInChildren<Text>();
+                    choiceText.text = " " + (choice.index + 1) + ". " + choice.text;
+                }
             }
             storyLoaded = true;
+            show_Buttons = false;
         }
     }
 
@@ -133,7 +146,7 @@ public class InkDialogueCutscene : MonoBehaviour
         // === 1. Destroy HUD children === //
         int childCount = this.transform.childCount;
         // Changing i >= ___ to be the # of children we currently have -- this will prevent other HUD elements from being deleted
-        for (int i = childCount - 1; i >= 4; i--)
+        for (int i = childCount - 1; i >= 5; i--)
         {
             GameObject.Destroy(this.transform.GetChild(i).gameObject);
         }
@@ -168,7 +181,17 @@ public class InkDialogueCutscene : MonoBehaviour
             // Go to continueStory()
             enter_Event.Invoke();
         }
-        
+
+        if (num < 10)
+        {
+            num++;
+        }
+        else if (num == 10)
+        {
+            show_Buttons = true;
+            num = 0;
+        }
+
         // Refresh
         refresh();
         checkEnd();
@@ -188,6 +211,18 @@ public class InkDialogueCutscene : MonoBehaviour
         {
             // Will continue the story until the next set of choices is found //
             text = story.Continue();
+        }
+        if(text.IndexOf("actually") > -1 || text.IndexOf("bite") > -1)
+        {
+            GameObject.Find("fishing").GetComponent<Animator>().SetTrigger("castingTrigger");
+        }
+        if (text.IndexOf("Smores") > -1 || text.IndexOf("remember is meeting") > -1)
+        {
+            GameObject.Find("campfireRoasting").GetComponent<Animator>().SetTrigger("sitForward");
+        }
+        if (text.IndexOf("big dipper") > -1 || text.IndexOf("galloping") > -1)
+        {
+            GameObject.Find("laying_down").GetComponent<Animator>().SetTrigger("point");
         }
 
         return text;
@@ -249,14 +284,14 @@ public class InkDialogueCutscene : MonoBehaviour
 
 
 
-    // ============= NEW VERSION OF DIALOGUE SELECTION ============= //
+    // ============= DIALOGUE SELECTION ============= //
     void makeDialogueSelection()
     {
 
         // 1. Call getNumberPressed() //
         int number = getNumberKeyPressed();
-        Debug.Log("Number is: ");
-        Debug.Log(number);
+        UnityEngine.Debug.Log("Number is: ");
+        UnityEngine.Debug.Log(number);
 
 
         // 2. Check that number generated is a valid choice number //
@@ -265,8 +300,7 @@ public class InkDialogueCutscene : MonoBehaviour
         {
 
             // 3. If it is... make the choice //
-            Debug.Log("Choice made");
-            // NOTE: 1st choice = index 0 ------ 2nd choice = index 1 ----- etc. (for any given set of dialogue)
+            UnityEngine.Debug.Log("Choice made");
             story.ChooseChoiceIndex(number - 1);
 
 
@@ -278,21 +312,77 @@ public class InkDialogueCutscene : MonoBehaviour
     }
 
 
+
+
     void checkEnd()
     {
         if (!story.canContinue)
         {
-            endObject.GetComponent<LoadLevelScript>().ApplicationLoadLevel();
+            // Start the stopwatch (delays scene transition) //
+            if (stopWatch_started == false)
+            {
+                UnityEngine.Debug.Log("Starting stopwatch");
+                stopWatch.Start();
+                stopWatch_started = true;
+            }
+
+            Scene scene = SceneManager.GetActiveScene();
+            int ms = 5000;
+            if(scene.name == "7_Stargazing")
+            {
+                ms = 10000;
+            }
+            if (stopWatch.ElapsedMilliseconds > ms && setThought == false)
+            {
+                GameObject.Find("Player").GetComponent<Thought>().Think("Press Space to continue to the next scene.");
+                setThought = true;
+            }
+
+            // Add a delay //
+            if (Input.GetKeyDown(KeyCode.Space) && stopWatch.ElapsedMilliseconds > 5000)
+            {
+                UnityEngine.Debug.Log(stopWatch.ElapsedMilliseconds);
+                endObject.GetComponent<LoadLevelScript>().ApplicationLoadLevel();
+            }
         }
     }
+
+
+
 
     /* ===== TIME DELAY FUNCTION (FAILED) ===== */
     IEnumerator timeDelay()
     {
-        Debug.Log("Started Coroutine at :" + Time.time);
+        UnityEngine.Debug.Log("Started Coroutine at :" + Time.time);
         yield return new WaitForSeconds(5);
         delay_time = delay_time + 1;
-        Debug.Log("Ended at: " + Time.time);
+        UnityEngine.Debug.Log("Ended at: " + Time.time);
+    }
+
+
+
+
+
+
+    // ========== TEXT FADE ========== //
+    public IEnumerator FadeTextToFullAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+        while (i.color.a < 1.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a + (Time.deltaTime / t));
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeTextToZeroAlpha(float t, Text i)
+    {
+        i.color = new Color(i.color.r, i.color.g, i.color.b, 1);
+        while (i.color.a > 0.0f)
+        {
+            i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a - (Time.deltaTime / t));
+            yield return null;
+        }
     }
 }
 

@@ -17,7 +17,7 @@ public class SceneTransition : MonoBehaviour
         {
             if (player.GetComponent<Inventory>().inventory.Contains(thing))
             {
-                SceneManager.LoadScene(sceneName);
+                StartCoroutine(GameObject.FindObjectOfType<SceneFader>().FadeAndLoadScene(SceneFader.FadeDirection.In, sceneName));
             }
             else
             {
@@ -38,7 +38,7 @@ public class SceneTransition : MonoBehaviour
                     return;
                 }
             }
-            SceneManager.LoadScene(sceneName);
+            StartCoroutine(GameObject.FindObjectOfType<SceneFader>().FadeAndLoadScene(SceneFader.FadeDirection.In, sceneName));
         }   
     }
 }

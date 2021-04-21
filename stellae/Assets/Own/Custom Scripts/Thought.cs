@@ -42,6 +42,10 @@ public class Thought : MonoBehaviour
             thinking = false;
             StartCoroutine(FadeTextToZeroAlpha(0.3f, box));
         }
+        /*else
+        {
+            yield return 0;
+        }*/
     }
 
     IEnumerator FadeTextToFullAlpha(float t, Text i)

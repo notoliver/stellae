@@ -9,8 +9,9 @@ public class LoadLevelScript : MonoBehaviour {
 	public string levelToLoad;
 
 	public void ApplicationLoadLevel(){
-		SceneManager.LoadScene(levelToLoad);
+		//SceneManager.LoadScene(levelToLoad);
+		StartCoroutine(GameObject.FindObjectOfType<SceneFader>().FadeAndLoadScene(SceneFader.FadeDirection.In, levelToLoad));
 		
 		//SceneManager.SetActiveScene(SceneManager.GetSceneByName(levelToLoad));
-	}
+	}	
 }

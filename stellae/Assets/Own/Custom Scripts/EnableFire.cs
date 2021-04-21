@@ -8,7 +8,6 @@ public class EnableFire : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("enabled");
         enable.SetActive(true);
     }
 }
